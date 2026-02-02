@@ -1,95 +1,133 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import loginImage from "../assets/Login.jpg";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/users/login",
+        { email: email.trim(), password }
+      );
+
+      // Save token and user data
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      
+      if (res.data.doctorInfo) {
+        localStorage.setItem("doctorInfo", JSON.stringify(res.data.doctorInfo));
+      }
+
+      // Role-based redirect
+      const role = res.data.user.role;
+      let redirectPath = "/";
+
+      switch (role) {
+        case "admin":
+          redirectPath = "/admin/dashboard";
+          break;
+        case "doctor":
+          redirectPath = "/doctor/dashboard";
+          // Check if doctor is verified - allow login but show message
+          if (res.data.doctorInfo && !res.data.doctorInfo.isVerified) {
+            // Don't block login, just inform
+            console.log("Doctor account pending verification");
+          }
+          break;
+        case "patient":
+          redirectPath = "/patient/dashboard";
+          break;
+        case "moderator":
+          redirectPath = "/moderator/dashboard";
+          break;
+        default:
+          redirectPath = "/";
+      }
+
+      alert("Login successful!");
+      navigate(redirectPath);
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || "Login failed. Please check your credentials and try again.";
+      setError(errorMessage);
+      console.error("Login error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-300">
+    <div className="flex min-h-screen bg-gray-300">
+      <div className="flex-1 flex items-center justify-center">
+        <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl flex overflow-hidden">
 
-      {/* LOGIN FORM SECTION */}
-      <div className="flex-1 flex items-center justify-center py-16 px-6">
-        <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl h-[520px] flex overflow-hidden">
-
-          {/* IMAGE LEFT */}
           <div className="hidden md:block w-1/2">
             <img
               src={loginImage}
               alt="Login"
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
             />
           </div>
 
-          {/* FORM RIGHT */}
-          <div className="w-full md:w-1/2 px-8 py-10 flex flex-col justify-center">
-            <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">Login</h2>
+          <div className="w-full md:w-1/2 p-8">
+            <h2 className="text-2xl font-bold text-center mb-6 text-blue-700">
+              Login
+            </h2>
 
-            
-            <form action="/login" method="POST" className="space-y-4">
-              
-              {/* EMAIL */}
-              <div>
-                <label className="block mb-1 font-medium">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  placeholder="Enter your email"
-                  className="w-full pl-3 pr-4 py-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
-                />
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+                {error}
               </div>
+            )}
 
-              {/* PASSWORD */}
-              <div>
-                <label className="block mb-1 font-medium">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  required
-                  placeholder="Enter your password"
-                  className="w-full pl-3 pr-4 py-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
 
               <button
                 type="submit"
-                className="w-full bg-blue-800 text-gray-50 py-2.5 rounded-md hover:bg-blue-900 transition font-semibold"
+                disabled={loading}
+                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition"
               >
-                Login
+                {loading ? "Logging in..." : "Login"}
               </button>
             </form>
 
-            <p className="mt-4 text-center text-gray-500 text-sm">
+            <p className="mt-4 text-center">
               Don't have an account?{" "}
-              <Link to="/register" className="text-blue-600 hover:underline">Register</Link>
+              <Link to="/register" className="text-blue-600 hover:underline">
+                Register
+              </Link>
             </p>
           </div>
+
         </div>
       </div>
-
-      {/* FOOTER */}
-      <footer className="bg-gray-800 text-gray-300 py-12 mt-auto">
-        <div className="max-w-7xl mx-auto px-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-xl font-bold text-white mb-4">HEALTHSEVA</h3>
-            <p>Providing quality healthcare services with compassion and professionalism.</p>
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-white mb-4">Quick Links</h3>
-            <ul>
-              <li className="hover:text-white transition cursor-pointer"><Link to="/">Home</Link></li>
-              <li className="hover:text-white transition cursor-pointer"><Link to="/about">About</Link></li>
-              <li className="hover:text-white transition cursor-pointer"><Link to="/departments">Departments</Link></li>
-              <li className="hover:text-white transition cursor-pointer"><Link to="/doctors">Doctors</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-white mb-4">Contact</h3>
-            <p>Email: healthseva@gmail.com</p>
-            <p>Phone: 021-456743</p>
-          </div>
-        </div>
-        <p className="text-center text-gray-400 mt-10">© 2025 HEALTHSEVA. All Rights Reserved.</p>
-      </footer> 
     </div>
   );
 };

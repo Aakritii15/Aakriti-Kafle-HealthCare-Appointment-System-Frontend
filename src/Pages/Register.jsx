@@ -1,133 +1,281 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import registerImage from "../assets/R.jpg";
-import { MdEmail, MdPerson } from "react-icons/md";
-import { RiLockPasswordLine } from "react-icons/ri";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    role: "patient",
+    phone: "",
+    address: "",
+    dateOfBirth: "",
+    // Doctor specific fields
+    specialization: "",
+    licenseNumber: "",
+    qualifications: "",
+    experience: "",
+    bio: "",
+    consultationFee: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    // Client-side validation
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      setLoading(false);
+      return;
+    }
+
+    if (formData.role === "doctor" && (!formData.specialization || !formData.licenseNumber)) {
+      setError("Specialization and License Number are required for doctor registration");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Prepare registration data
+      const registrationData = {
+        username: formData.username.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        role: formData.role,
+        phone: formData.phone?.trim() || undefined,
+        address: formData.address?.trim() || undefined,
+        dateOfBirth: formData.dateOfBirth || undefined,
+      };
+
+      // Add doctor-specific fields if role is doctor
+      if (formData.role === "doctor") {
+        registrationData.specialization = formData.specialization.trim();
+        registrationData.licenseNumber = formData.licenseNumber.trim();
+        registrationData.qualifications = formData.qualifications
+          ? formData.qualifications.split(",").map((q) => q.trim()).filter(q => q)
+          : [];
+        registrationData.experience = formData.experience ? parseInt(formData.experience) : 0;
+        registrationData.bio = formData.bio?.trim() || "";
+        registrationData.consultationFee = formData.consultationFee
+          ? parseFloat(formData.consultationFee)
+          : 0;
+      }
+
+      const res = await axios.post("http://localhost:3000/users/register", registrationData);
+
+      if (formData.role === "doctor" && res.data.requiresVerification) {
+        alert(`${res.data.message}\n\nYour doctor account is pending admin verification. You can login, but some features may be limited until an admin verifies your account.`);
+      } else {
+        alert(res.data.message);
+      }
+      
+      navigate("/login");
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || "Registration failed. Please check your connection and try again.";
+      setError(errorMessage);
+      console.error("Registration error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-300">
+    <div className="flex min-h-screen bg-gray-300">
+      <div className="flex-1 flex items-center justify-center py-8">
+        <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl flex overflow-hidden">
 
-      {/* REGISTER FORM SECTION */}
-      <div className="flex-1 flex items-center justify-center py-16 px-6">
-        <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl h-[560px] flex overflow-hidden">
-
-          {/* IMAGE LEFT */}
           <div className="hidden md:block w-1/2">
-            <img
-              src={registerImage}
-              alt="Register"
-              className="w-full h-full object-cover"
-            />
+            <img src={registerImage} alt="Register" className="h-full w-full object-cover" />
           </div>
 
-          {/* FORM RIGHT */}
-          <div className="w-full md:w-1/2 px-8 py-10 flex flex-col justify-center">
-            <h2 className="text-2xl font-bold mb-6 text-center text-blue-800">Create Account</h2>
+          <div className="w-full md:w-1/2 p-8 overflow-y-auto max-h-screen">
+            <h2 className="text-2xl font-bold text-center mb-6 text-blue-700">Create Account</h2>
 
-           
-            <form action="/register" method="POST" className="space-y-4">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+                {error}
+              </div>
+            )}
 
-              {/* NAME */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Role Selection */}
               <div>
-                <label className="block mb-1 font-medium">Full Name</label>
-                <div className="relative">
-                  <MdPerson className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Register as
+                </label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-2 border rounded"
+                >
+                  <option value="patient">Patient</option>
+                  <option value="doctor">Doctor</option>
+                  <option value="moderator">Moderator</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Note: Admin accounts can only be created by existing admins
+                </p>
+              </div>
+
+              {/* Common Fields */}
+              <input
+                type="text"
+                name="username"
+                placeholder="Full Name"
+                value={formData.username}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border rounded"
+              />
+
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border rounded"
+              />
+
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                minLength={6}
+                className="w-full p-2 border rounded"
+              />
+
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone Number"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+              />
+
+              <input
+                type="text"
+                name="address"
+                placeholder="Address (Optional)"
+                value={formData.address}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+              />
+
+              <input
+                type="date"
+                name="dateOfBirth"
+                placeholder="Date of Birth (Optional)"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+              />
+
+              {/* Doctor Specific Fields */}
+              {formData.role === "doctor" && (
+                <>
+                  <div className="border-t pt-4 mt-4">
+                    <h3 className="font-semibold text-gray-700 mb-3">Doctor Information</h3>
+                  </div>
+
                   <input
                     type="text"
-                    name="name"
-                    placeholder="Enter your name"
+                    name="specialization"
+                    placeholder="Specialization *"
+                    value={formData.specialization}
+                    onChange={handleChange}
                     required
-                    className="w-full pl-10 pr-4 py-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 border rounded"
                   />
-                </div>
-              </div>
 
-              {/* EMAIL */}
-              <div>
-                <label className="block mb-1 font-medium">Email</label>
-                <div className="relative">
-                  <MdEmail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
                   <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email"
+                    type="text"
+                    name="licenseNumber"
+                    placeholder="License Number *"
+                    value={formData.licenseNumber}
+                    onChange={handleChange}
                     required
-                    className="w-full pl-10 pr-4 py-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 border rounded"
                   />
-                </div>
-              </div>
 
-              {/* PASSWORD */}
-              <div>
-                <label className="block mb-1 font-medium">Password</label>
-                <div className="relative">
-                  <RiLockPasswordLine className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
                   <input
-                    type="password"
-                    name="password"
-                    placeholder="Create a password"
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                    type="text"
+                    name="qualifications"
+                    placeholder="Qualifications (comma-separated)"
+                    value={formData.qualifications}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
                   />
-                </div>
-              </div>
 
-              {/* CONFIRM PASSWORD */}
-              <div>
-                <label className="block mb-1 font-medium">Confirm Password</label>
-                <div className="relative">
-                  <RiLockPasswordLine className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
                   <input
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="Confirm password"
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                    type="number"
+                    name="experience"
+                    placeholder="Years of Experience"
+                    value={formData.experience}
+                    onChange={handleChange}
+                    min="0"
+                    className="w-full p-2 border rounded"
                   />
-                </div>
-              </div>
+
+                  <textarea
+                    name="bio"
+                    placeholder="Bio (Optional)"
+                    value={formData.bio}
+                    onChange={handleChange}
+                    rows="3"
+                    className="w-full p-2 border rounded"
+                  />
+
+                  <input
+                    type="number"
+                    name="consultationFee"
+                    placeholder="Consultation Fee"
+                    value={formData.consultationFee}
+                    onChange={handleChange}
+                    min="0"
+                    step="0.01"
+                    className="w-full p-2 border rounded"
+                  />
+                </>
+              )}
 
               <button
                 type="submit"
-                className="w-full bg-blue-800 text-gray-50 py-2.5 rounded-md hover:bg-blue-900 transition font-semibold"
+                disabled={loading}
+                className="w-full bg-blue-800 text-gray-50 py-2.5 rounded-md hover:bg-blue-900 transition font-semibold disabled:bg-blue-400 disabled:cursor-not-allowed"
               >
-                Register
+                {loading ? "Registering..." : "Register"}
               </button>
             </form>
 
             <p className="mt-4 text-center text-gray-500 text-sm">
               Already have an account?{" "}
-              <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
+              <Link to="/login" className="text-blue-600">Login</Link>
             </p>
           </div>
         </div>
       </div>
-
-      {/* FOOTER */}
-      <footer className="bg-gray-800 text-gray-300 py-12 mt-auto">
-        <div className="max-w-7xl mx-auto px-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-xl font-bold text-white mb-4">HEALTHSEVA</h3>
-            <p>Providing quality healthcare services with compassion and professionalism.</p>
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-white mb-4">Quick Links</h3>
-            <ul>
-              <li className="hover:text-white transition cursor-pointer"><Link to="/">Home</Link></li>
-              <li className="hover:text-white transition cursor-pointer"><Link to="/about">About</Link></li>
-              <li className="hover:text-white transition cursor-pointer"><Link to="/departments">Department</Link></li>
-              <li className="hover:text-white transition cursor-pointer"><Link to="/doctors">Doctors</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-white mb-4">Contact</h3>
-            <p>Email: healthseva@gmail.com</p>
-            <p>Phone: 021-456743</p>
-          </div>
-        </div>
-        <p className="text-center text-gray-400 mt-10">© 2025 HEALTHSEVA. All Rights Reserved.</p>
-      </footer>
     </div>
   );
 };

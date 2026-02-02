@@ -16,7 +16,7 @@ function PatientDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Link
-          to="/patient/search"
+          to="/search-doctors"
           className="bg-white p-6 rounded-xl shadow hover:shadow-lg flex items-center gap-4 text-lg font-medium"
         >
           <FaSearch className="text-blue-700 text-2xl" />
@@ -24,7 +24,7 @@ function PatientDashboard() {
         </Link>
 
         <Link
-          to="/patient/book"
+          to="/search-doctors"
           className="bg-white p-6 rounded-xl shadow hover:shadow-lg flex items-center gap-4 text-lg font-medium"
         >
           <FaCalendarPlus className="text-green-600 text-2xl" />
@@ -32,7 +32,7 @@ function PatientDashboard() {
         </Link>
 
         <Link
-          to="/patient/appointments"
+          to="/my-appointments"
           className="bg-white p-6 rounded-xl shadow hover:shadow-lg flex items-center gap-4 text-lg font-medium"
         >
           <FaClipboardList className="text-purple-600 text-2xl" />
