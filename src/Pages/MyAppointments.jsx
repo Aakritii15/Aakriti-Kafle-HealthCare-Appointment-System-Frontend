@@ -9,7 +9,7 @@ const MyAppointments = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [cancellingId, setCancellingId] = useState(null);
-  const [cancelReason, setCancelReason] = useState("");
+  const [cancelReasons, setCancelReasons] = useState({});
 
   useEffect(() => {
     fetchAppointments();
@@ -31,6 +31,8 @@ const MyAppointments = () => {
   };
 
   const handleCancel = async (appointmentId) => {
+    const cancelReason = cancelReasons[appointmentId] || "";
+    
     if (!cancelReason.trim()) {
       alert("Please provide a reason for cancellation");
       return;
@@ -50,7 +52,12 @@ const MyAppointments = () => {
       );
 
       alert("Appointment cancelled successfully");
-      setCancelReason("");
+      // Clear the cancel reason for this appointment
+      setCancelReasons(prev => {
+        const newReasons = { ...prev };
+        delete newReasons[appointmentId];
+        return newReasons;
+      });
       setCancellingId(null);
       fetchAppointments(); // Refresh list
     } catch (err) {
@@ -59,6 +66,13 @@ const MyAppointments = () => {
     } finally {
       setCancellingId(null);
     }
+  };
+
+  const handleCancelReasonChange = (appointmentId, value) => {
+    setCancelReasons(prev => ({
+      ...prev,
+      [appointmentId]: value
+    }));
   };
 
   const formatDate = (dateString) => {
@@ -220,13 +234,13 @@ const MyAppointments = () => {
                       <input
                         type="text"
                         placeholder="Reason for cancellation (required)"
-                        value={cancelReason}
-                        onChange={(e) => setCancelReason(e.target.value)}
+                        value={cancelReasons[appointment.id] || ""}
+                        onChange={(e) => handleCancelReasonChange(appointment.id, e.target.value)}
                         className="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500"
                       />
                       <button
                         onClick={() => handleCancel(appointment.id)}
-                        disabled={cancellingId === appointment.id}
+                        disabled={cancellingId === appointment.id || !cancelReasons[appointment.id]?.trim()}
                         className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed transition"
                       >
                         {cancellingId === appointment.id ? "Cancelling..." : "Cancel Appointment"}

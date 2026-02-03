@@ -21,15 +21,6 @@ const DoctorDashboard = () => {
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Doctor Dashboard</h1>
         
         <div className="bg-white rounded-lg shadow p-6">
-          {doctorInfo && !doctorInfo.isVerified && (
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-              <p className="text-yellow-800">
-                <strong>Notice:</strong> Your account is pending admin verification. 
-                Some features may be limited until verification is complete.
-              </p>
-            </div>
-          )}
-          
           <h2 className="text-xl font-semibold mb-4">Welcome, Dr. {user.username}!</h2>
           <p className="text-gray-600 mb-4">You are logged in as a Doctor.</p>
           
@@ -40,9 +31,7 @@ const DoctorDashboard = () => {
               </p>
               <p className="text-sm text-gray-600">
                 <strong>Verification Status:</strong>{" "}
-                <span className={doctorInfo.isVerified ? "text-green-600" : "text-yellow-600"}>
-                  {doctorInfo.isVerified ? "Verified" : "Pending"}
-                </span>
+                <span className="text-green-600">Verified</span>
               </p>
             </div>
           )}
