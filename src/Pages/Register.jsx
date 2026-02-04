@@ -3,6 +3,19 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import registerImage from "../assets/R.jpg";
 
+const SPECIALIZATION_OPTIONS = [
+  "General Physician",
+  "Cardiologist",
+  "Dermatologist",
+  "Pediatrician",
+  "Gynecologist",
+  "Orthopedic",
+  "Neurologist",
+  "Psychiatrist",
+  "Dentist",
+  "Physician",
+];
+
 const Register = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -199,15 +212,25 @@ const Register = () => {
                     <h3 className="font-semibold text-gray-700 mb-3">Doctor Information</h3>
                   </div>
 
-                  <input
-                    type="text"
-                    name="specialization"
-                    placeholder="Specialization *"
-                    value={formData.specialization}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-2 border rounded"
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Specialization *
+                    </label>
+                    <select
+                      name="specialization"
+                      value={formData.specialization}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Select Specialization</option>
+                      {SPECIALIZATION_OPTIONS.map((spec) => (
+                        <option key={spec} value={spec}>
+                          {spec}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
                   <input
                     type="text"
