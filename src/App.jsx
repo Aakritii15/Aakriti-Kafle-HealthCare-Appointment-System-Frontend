@@ -9,7 +9,6 @@ import Register from "./Pages/Register";
 import PatientDashboard from "./Patients/PatientDashboard";
 import AdminDashboard from "./Pages/AdminDashboard";
 import DoctorDashboard from "./Pages/DoctorDashboard";
-import ModeratorDashboard from "./Pages/ModeratorDashboard";
 import SearchDoctors from "./Pages/SearchDoctors";
 import BookAppointment from "./Pages/BookAppointment";
 import MyAppointments from "./Pages/MyAppointments";
@@ -64,14 +63,6 @@ function App() {
             element={
               <ProtectedRoute requiredRole="doctor">
                 <DoctorAppointments />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/moderator/dashboard"
-            element={
-              <ProtectedRoute requiredRole="moderator">
-                <ModeratorDashboard />
               </ProtectedRoute>
             }
           />

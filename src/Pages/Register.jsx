@@ -139,7 +139,6 @@ const Register = () => {
                 >
                   <option value="patient">Patient</option>
                   <option value="doctor">Doctor</option>
-                  <option value="moderator">Moderator</option>
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
                   Note: Admin accounts can only be created by existing admins

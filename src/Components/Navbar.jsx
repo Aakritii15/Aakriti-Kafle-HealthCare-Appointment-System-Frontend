@@ -22,8 +22,6 @@ const Navbar = () => {
         return "/doctor/dashboard";
       case "patient":
         return "/patient/dashboard";
-      case "moderator":
-        return "/moderator/dashboard";
       default:
         return "/";
     }
