@@ -48,9 +48,6 @@ const Login = () => {
         case "patient":
           redirectPath = "/patient/dashboard";
           break;
-        case "moderator":
-          redirectPath = "/moderator/dashboard";
-          break;
         default:
           redirectPath = "/";
       }

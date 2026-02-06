@@ -93,9 +93,9 @@ const AboutUs = () => {
       </section> */}
 
       {/* FOOTER */}
-      <footer className="bg-gray-800 text-gray-300 py-10 text-center">
+      {/* <footer className="bg-gray-800 text-gray-300 py-10 text-center">
         © 2025 HEALTHSEVA. All Rights Reserved.
-      </footer>
+      </footer> */}
 
     </div>
   );
