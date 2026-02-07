@@ -4,6 +4,7 @@ import Footer from "./Components/Footer";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import Home from "./Pages/Home";
 import AboutUs from "./Pages/AboutUs";
+import Contact from "./Pages/Contact";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import PatientDashboard from "./Patients/PatientDashboard";
@@ -13,6 +14,12 @@ import SearchDoctors from "./Pages/SearchDoctors";
 import BookAppointment from "./Pages/BookAppointment";
 import MyAppointments from "./Pages/MyAppointments";
 import DoctorAppointments from "./Pages/DoctorAppointments";
+import DoctorVerification from "./Pages/DoctorVerification";
+import AdminUserManagement from "./Pages/AdminUserManagement";
+import AdminEmergencyCases from "./Pages/AdminEmergencyCases";
+import AdminReports from "./Pages/AdminReports";
+import ForgotPassword from "./Pages/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword";
 
 function App() {
   return (
@@ -22,8 +29,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
+            <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Protected Routes */}
           <Route
@@ -92,7 +102,44 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin/verify-doctors"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <DoctorVerification />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminUserManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/emergency-cases"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminEmergencyCases />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/reports"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminReports />
+              </ProtectedRoute>
+            }
+          />
+
         </Routes>
+
+
+        
+        
       </main>
       <Footer />
     </div>

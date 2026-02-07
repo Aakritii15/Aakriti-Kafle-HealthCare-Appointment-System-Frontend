@@ -62,6 +62,12 @@ const Register = () => {
       return;
     }
 
+    if (formData.role === "doctor" && parseFloat(formData.consultationFee) < 500) {
+      setError("Consultation Fee must be at least NRS 500");
+      setLoading(false);
+      return;
+    }
+
     try {
       // Prepare registration data
       const registrationData = {
@@ -95,7 +101,7 @@ const Register = () => {
       } else {
         alert(res.data.message);
       }
-      
+
       navigate("/login");
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || "Registration failed. Please check your connection and try again.";
@@ -244,7 +250,7 @@ const Register = () => {
                   <input
                     type="text"
                     name="qualifications"
-                    placeholder="Qualifications (comma-separated)"
+                    placeholder="Qualifications"
                     value={formData.qualifications}
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
@@ -262,7 +268,7 @@ const Register = () => {
 
                   <textarea
                     name="bio"
-                    placeholder="Bio (Optional)"
+                    placeholder="Bio"
                     value={formData.bio}
                     onChange={handleChange}
                     rows="3"
@@ -275,8 +281,8 @@ const Register = () => {
                     placeholder="Consultation Fee"
                     value={formData.consultationFee}
                     onChange={handleChange}
-                    min="0"
-                    step="0.01"
+                    min="500"
+                    step="50"
                     className="w-full p-2 border rounded"
                   />
                 </>

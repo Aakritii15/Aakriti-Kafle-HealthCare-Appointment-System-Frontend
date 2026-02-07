@@ -39,7 +39,7 @@ const SearchDoctors = () => {
   const [consultationType, setConsultationType] = useState(""); // physical, online
   const [minFee, setMinFee] = useState("");
   const [maxFee, setMaxFee] = useState("");
-  const [gender, setGender] = useState(""); // male, female
+  const [gender, setGender] = useState(""); 
 
   // Advanced
   const [experience, setExperience] = useState("Any");
@@ -169,7 +169,7 @@ const SearchDoctors = () => {
                 {/* Specialization */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Search by Specialization ⭐
+                    Search by Specialization 
                   </label>
                   <select
                     value={specialization}
@@ -222,7 +222,7 @@ const SearchDoctors = () => {
                 {/* Area */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Area / Locality
+                    Area 
                   </label>
                   <input
                     type="text"
@@ -238,7 +238,7 @@ const SearchDoctors = () => {
             {/* Filters */}
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Filters (Very Useful)
+                Filters 
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* Availability */}
@@ -293,7 +293,7 @@ const SearchDoctors = () => {
                 {/* Fee Range */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Fee Range (Rs.)
+                    Fee Range 
                   </label>
                   <div className="flex gap-2">
                     <input
@@ -321,7 +321,7 @@ const SearchDoctors = () => {
                 {/* Gender */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Gender (Optional)
+                    Gender 
                   </label>
                   <select
                     value={gender}
@@ -339,7 +339,7 @@ const SearchDoctors = () => {
             {/* Advanced */}
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Advanced (Nice to Have)
+                Advanced 
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Experience */}
@@ -376,15 +376,15 @@ const SearchDoctors = () => {
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-gray-500 mt-1">
+                  {/* <p className="text-xs text-gray-500 mt-1">
                     Example: 4+ ⭐ means highly rated doctors.
-                  </p>
+                  </p> */}
                 </div>
 
                 {/* Languages */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Languages Spoken
+                    Languages 
                   </label>
                   <input
                     type="text"
@@ -393,9 +393,9 @@ const SearchDoctors = () => {
                     onChange={(e) => setLanguage(e.target.value)}
                     className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  {/* <p className="text-xs text-gray-500 mt-1">
                     Type one or multiple languages (comma separated).
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>

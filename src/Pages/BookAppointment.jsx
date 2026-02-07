@@ -15,6 +15,7 @@ const BookAppointment = () => {
     appointmentTime: "",
     reason: "",
     notes: "",
+    isEmergency: false,
   });
 
   useEffect(() => {
@@ -37,9 +38,10 @@ const BookAppointment = () => {
   };
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: type === "checkbox" ? checked : value,
     });
     setError("");
   };
@@ -74,6 +76,7 @@ const BookAppointment = () => {
           appointmentTime: formData.appointmentTime,
           reason: formData.reason,
           notes: formData.notes || undefined,
+          isEmergency: formData.isEmergency,
         },
         config
       );
@@ -140,7 +143,11 @@ const BookAppointment = () => {
             {doctor.experience > 0 && (
               <p><span className="font-medium">Experience:</span> {doctor.experience} years</p>
             )}
-            <p><span className="font-medium">Consultation Fee:</span> ${doctor.consultationFee || 0}</p>
+            <p>
+  <span className="font-medium">Consultation Fee:</span>{" "}
+  Rs. {new Intl.NumberFormat("en-NP").format(doctor.consultationFee || 0)}
+</p>
+
           </div>
         </div>
 
@@ -211,6 +218,20 @@ const BookAppointment = () => {
                 placeholder="Any additional information..."
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="isEmergency"
+                name="isEmergency"
+                checked={formData.isEmergency}
+                onChange={handleChange}
+                className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+              />
+              <label htmlFor="isEmergency" className="text-sm font-medium text-gray-700">
+                Mark as emergency
+              </label>
             </div>
 
             <div className="flex gap-4">

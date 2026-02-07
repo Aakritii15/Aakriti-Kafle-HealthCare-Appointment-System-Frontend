@@ -21,41 +21,23 @@ const Login = () => {
         { email: email.trim(), password }
       );
 
-      // Save token and user data
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-      
-      if (res.data.doctorInfo) {
-        localStorage.setItem("doctorInfo", JSON.stringify(res.data.doctorInfo));
-      }
+      if (res.data.doctorInfo) localStorage.setItem("doctorInfo", JSON.stringify(res.data.doctorInfo));
 
-      // Role-based redirect
       const role = res.data.user.role;
       let redirectPath = "/";
-
       switch (role) {
-        case "admin":
-          redirectPath = "/admin/dashboard";
-          break;
-        case "doctor":
-          redirectPath = "/doctor/dashboard";
-          // Check if doctor is verified - allow login but show message
-          if (res.data.doctorInfo && !res.data.doctorInfo.isVerified) {
-            // Don't block login, just inform
-            console.log("Doctor account pending verification");
-          }
-          break;
-        case "patient":
-          redirectPath = "/patient/dashboard";
-          break;
-        default:
-          redirectPath = "/";
+        case "admin": redirectPath = "/admin/dashboard"; break;
+        case "doctor": redirectPath = "/doctor/dashboard"; break;
+        case "patient": redirectPath = "/patient/dashboard"; break;
+        default: redirectPath = "/"; 
       }
 
       alert("Login successful!");
       navigate(redirectPath);
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || "Login failed. Please check your credentials and try again.";
+      const errorMessage = err.response?.data?.message || err.message || "Login failed. Check your credentials.";
       setError(errorMessage);
       console.error("Login error:", err);
     } finally {
@@ -64,65 +46,67 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-300">
-      <div className="flex-1 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl flex overflow-hidden">
+    <div className="min-h-screen bg-gray-300 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full flex overflow-hidden">
+        
+        {/* Left Image */}
+        <div className="hidden md:block md:w-1/2 relative">
+          <img
+            src={loginImage}
+            alt="Login"
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+        </div>
 
-          <div className="hidden md:block w-1/2">
-            <img
-              src={loginImage}
-              alt="Login"
-              className="h-full w-full object-cover"
+        {/* Login Form */}
+        <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
+          <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-6">Welcome Back!</h2>
+          <p className="text-center text-gray-500 mb-8">Login to your account</p>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 text-center">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
-          </div>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            />
 
-          <div className="w-full md:w-1/2 p-8">
-            <h2 className="text-2xl font-bold text-center mb-6 text-blue-700">
-              Login
-            </h2>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
 
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition"
-              >
-                {loading ? "Logging in..." : "Login"}
-              </button>
-            </form>
-
-            <p className="mt-4 text-center">
-              Don't have an account?{" "}
-              <Link to="/register" className="text-blue-600 hover:underline">
-                Register
+            {/* Stacked Links */}
+            <div className="flex flex-col items-center gap-2 mt-3 text-sm text-gray-500">
+              <Link to="/forgot-password" className="text-blue-600 hover:underline">
+                Forgot password?
               </Link>
-            </p>
-          </div>
-
+              
+              <Link to="/register" className="text-blue-600 hover:underline">
+                Don't have an account? Register
+              </Link>
+            </div>
+          </form>
         </div>
       </div>
     </div>
