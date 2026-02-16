@@ -17,6 +17,26 @@ const BookAppointment = () => {
     notes: "",
     isEmergency: false,
   });
+  const [bookedSlots, setBookedSlots] = useState([]);
+
+  useEffect(() => {
+    if (doctorId && formData.appointmentDate) {
+      fetchBookedSlots();
+    }
+  }, [doctorId, formData.appointmentDate]);
+
+  const fetchBookedSlots = async () => {
+    try {
+      const config = getAuthConfig();
+      const res = await axios.get(
+        `http://localhost:3000/appointments/booked-slots?doctorId=${doctorId}&date=${formData.appointmentDate}`,
+        config
+      );
+      setBookedSlots(res.data.slots || []);
+    } catch (err) {
+      console.error("Error fetching booked slots:", err);
+    }
+  };
 
   useEffect(() => {
     if (doctorId) {
@@ -56,6 +76,35 @@ const BookAppointment = () => {
       setError("Please fill in all required fields");
       setSubmitting(false);
       return;
+    }
+
+    // Check availability based on doctor's schedule
+    const dateObj = new Date(formData.appointmentDate);
+    const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+
+    if (doctor.availability) {
+      const daySlots = doctor.availability[dayOfWeek];
+      if (!daySlots || daySlots.length === 0) {
+        setError(`Doctor is not available on ${dayOfWeek}s.`);
+        setSubmitting(false);
+        return;
+      }
+
+      // Check time range
+      const time = formData.appointmentTime;
+      const isWithinSlot = daySlots.some(slot => time >= slot.start && time <= slot.end);
+      if (!isWithinSlot) {
+        setError(`Doctor is only available between: ${daySlots.map(s => `${s.start} - ${s.end}`).join(", ")}`);
+        setSubmitting(false);
+        return;
+      }
+
+      // Check if slot is booked
+      if (bookedSlots.includes(time)) {
+        setError("This time slot is already booked. Please choose another time.");
+        setSubmitting(false);
+        return;
+      }
     }
 
     // Check if date is in the future
@@ -144,9 +193,9 @@ const BookAppointment = () => {
               <p><span className="font-medium">Experience:</span> {doctor.experience} years</p>
             )}
             <p>
-  <span className="font-medium">Consultation Fee:</span>{" "}
-  Rs. {new Intl.NumberFormat("en-NP").format(doctor.consultationFee || 0)}
-</p>
+              <span className="font-medium">Consultation Fee:</span>{" "}
+              Rs. {new Intl.NumberFormat("en-NP").format(doctor.consultationFee || 0)}
+            </p>
 
           </div>
         </div>
@@ -189,6 +238,27 @@ const BookAppointment = () => {
                 required
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {doctor && doctor.availability && (
+                <div className="mt-2 text-sm text-gray-600">
+                  <p className="font-medium text-gray-800">Available Hours:</p>
+                  {Object.entries(doctor.availability).map(([day, slots]) => {
+                    if (slots && slots.length > 0) {
+                      return (
+                        <div key={day} className="capitalize">
+                          {day}: {slots.map(s => `${s.start} - ${s.end}`).join(", ")}
+                        </div>
+                      )
+                    }
+                    return null;
+                  })}
+                </div>
+              )}
+              {bookedSlots.length > 0 && (
+                <div className="mt-2 text-sm text-red-500">
+                  <p className="font-medium">Booked Slots (Unavailable):</p>
+                  <p>{bookedSlots.join(", ")}</p>
+                </div>
+              )}
             </div>
 
             <div>

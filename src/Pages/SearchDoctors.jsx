@@ -39,7 +39,7 @@ const SearchDoctors = () => {
   const [consultationType, setConsultationType] = useState(""); // physical, online
   const [minFee, setMinFee] = useState("");
   const [maxFee, setMaxFee] = useState("");
-  const [gender, setGender] = useState(""); 
+  const [gender, setGender] = useState("");
 
   // Advanced
   const [experience, setExperience] = useState("Any");
@@ -123,12 +123,8 @@ const SearchDoctors = () => {
     fetchDoctors();
   };
 
-  const handleBookAppointment = (doctorId) => {
-    navigate(`/book-appointment/${doctorId}`);
-  };
-
   const handleViewDetails = (doctorId) => {
-    navigate(`/doctor/${doctorId}`);
+    navigate(`/book-appointment/${doctorId}`);
   };
 
   return (
@@ -169,7 +165,7 @@ const SearchDoctors = () => {
                 {/* Specialization */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Search by Specialization 
+                    Search by Specialization
                   </label>
                   <select
                     value={specialization}
@@ -222,7 +218,7 @@ const SearchDoctors = () => {
                 {/* Area */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Area 
+                    Area
                   </label>
                   <input
                     type="text"
@@ -238,7 +234,7 @@ const SearchDoctors = () => {
             {/* Filters */}
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Filters 
+                Filters
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* Availability */}
@@ -293,7 +289,7 @@ const SearchDoctors = () => {
                 {/* Fee Range */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Fee Range 
+                    Fee Range
                   </label>
                   <div className="flex gap-2">
                     <input
@@ -321,7 +317,7 @@ const SearchDoctors = () => {
                 {/* Gender */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Gender 
+                    Gender
                   </label>
                   <select
                     value={gender}
@@ -339,7 +335,7 @@ const SearchDoctors = () => {
             {/* Advanced */}
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Advanced 
+                Advanced
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Experience */}
@@ -384,7 +380,7 @@ const SearchDoctors = () => {
                 {/* Languages */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Languages 
+                    Languages
                   </label>
                   <input
                     type="text"
@@ -475,15 +471,9 @@ const SearchDoctors = () => {
                 <div className="flex gap-2 mt-4">
                   <button
                     onClick={() => handleViewDetails(doctor.id)}
-                    className="flex-1 bg-gray-200 text-gray-800 py-2 rounded hover:bg-gray-300 transition text-sm"
-                  >
-                    View Details
-                  </button>
-                  <button
-                    onClick={() => handleBookAppointment(doctor.id)}
                     className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition text-sm"
                   >
-                    Book Appointment
+                    View Details & Book
                   </button>
                 </div>
               </div>

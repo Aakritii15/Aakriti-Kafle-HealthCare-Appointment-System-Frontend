@@ -10,6 +10,7 @@ import Register from "./Pages/Register";
 import PatientDashboard from "./Patients/PatientDashboard";
 import AdminDashboard from "./Pages/AdminDashboard";
 import DoctorDashboard from "./Pages/DoctorDashboard";
+import DoctorAvailability from "./Pages/DoctorAvailability";
 import SearchDoctors from "./Pages/SearchDoctors";
 import BookAppointment from "./Pages/BookAppointment";
 import MyAppointments from "./Pages/MyAppointments";
@@ -29,7 +30,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
-            <Route path="/contact" element={<Contact />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -73,6 +74,14 @@ function App() {
             element={
               <ProtectedRoute requiredRole="doctor">
                 <DoctorAppointments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/doctor/availability"
+            element={
+              <ProtectedRoute requiredRole="doctor">
+                <DoctorAvailability />
               </ProtectedRoute>
             }
           />
@@ -138,8 +147,8 @@ function App() {
         </Routes>
 
 
-        
-        
+
+
       </main>
       <Footer />
     </div>

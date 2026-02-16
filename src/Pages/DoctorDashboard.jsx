@@ -77,6 +77,7 @@ const DoctorDashboard = () => {
           {/* Availability */}
           <button
             type="button"
+            onClick={() => navigate("/doctor/availability")}
             className="group bg-white rounded-2xl border border-slate-200 shadow-md hover:shadow-xl transition-all p-6 text-left"
           >
             <div className="flex items-center gap-4 mb-4">
@@ -90,7 +91,6 @@ const DoctorDashboard = () => {
             <p className="text-sm text-slate-600">
               Set your working days, hours, and consultation slots.
             </p>
-            <p className="text-xs text-blue-600 mt-3">(Coming soon)</p>
           </button>
 
           {/* Appointments */}
