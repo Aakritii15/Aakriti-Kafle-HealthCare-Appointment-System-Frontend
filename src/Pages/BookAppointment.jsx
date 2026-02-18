@@ -169,7 +169,7 @@ const BookAppointment = () => {
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-300 p-8">
       <div className="max-w-3xl mx-auto">
         <button
           onClick={() => navigate("/search-doctors")}

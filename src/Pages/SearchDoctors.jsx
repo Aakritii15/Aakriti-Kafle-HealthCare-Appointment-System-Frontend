@@ -128,272 +128,137 @@ const SearchDoctors = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold text-gray-800">Search Doctors</h1>
-        <p className="text-gray-600">
-          Find the right doctor by name, specialization, hospital, location, availability,
-          consultation type, fee range, and more.
-        </p>
+    <div className="bg-gray-300 px-10 py-20 flex flex-col md:flex-row items-center gap-10">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h1 className="text-4xl font-bold text-gray-800">Find Your Doctor</h1>
+          <p className="text-gray-600 mt-2">
+            Search by name, specialization, hospital, location, availability, consultation type, and fee.
+          </p>
+        </div>
 
         {/* Search Form */}
-        <div className="bg-white rounded-lg shadow p-6 space-y-6">
+        <div className="bg-white rounded-2xl shadow-xl p-8">
           <form onSubmit={handleSearch} className="space-y-6">
             {/* Basic Search */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Basic Search
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Doctor Name */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Search by Doctor Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Dr. Sita Sharma"
-                    value={doctorName}
-                    onChange={(e) => setDoctorName(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Useful when you already know the doctor name.
-                  </p>
-                </div>
-
-                {/* Specialization */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Search by Specialization
-                  </label>
-                  <select
-                    value={specialization}
-                    onChange={(e) => setSpecialization(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">All Specializations</option>
-                    {specializations.map((spec) => (
-                      <option key={spec} value={spec}>
-                        {spec}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-xs text-gray-500 mt-1">
-                    General Physician, Cardiologist, Dermatologist, Pediatrician, etc.
-                  </p>
-                </div>
-
-                {/* Hospital / Clinic */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Search by Hospital / Clinic
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Hospital or Clinic name"
-                    value={hospitalClinic}
-                    onChange={(e) => setHospitalClinic(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Useful for cities with multiple branches.
-                  </p>
-                </div>
-
-                {/* City */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Kathmandu, Pokhara, Lalitpur"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                {/* Area */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Area
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. New Baneshwor, Lakeside"
-                    value={area}
-                    onChange={(e) => setArea(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Basic Search</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <input
+                  type="text"
+                  placeholder="Doctor Name (e.g. Dr. Sita Sharma)"
+                  value={doctorName}
+                  onChange={(e) => setDoctorName(e.target.value)}
+                  className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <select
+                  value={specialization}
+                  onChange={(e) => setSpecialization(e.target.value)}
+                  className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                  <option value="">All Specializations</option>
+                  {specializations.map((spec) => (
+                    <option key={spec} value={spec}>{spec}</option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  placeholder="Hospital / Clinic"
+                  value={hospitalClinic}
+                  onChange={(e) => setHospitalClinic(e.target.value)}
+                  className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <input
+                  type="text"
+                  placeholder="City"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <input
+                  type="text"
+                  placeholder="Area"
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                  className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
               </div>
             </div>
 
             {/* Filters */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Filters
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {/* Availability */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Availability
-                  </label>
-                  <select
-                    value={availability}
-                    onChange={(e) => setAvailability(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Any</option>
-                    <option value="today">Available today</option>
-                    <option value="tomorrow">Available tomorrow</option>
-                    <option value="week">Available this week</option>
-                  </select>
-                </div>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Filters</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                <select
+                  value={availability}
+                  onChange={(e) => setAvailability(e.target.value)}
+                  className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                  <option value="">Availability</option>
+                  <option value="today">Today</option>
+                  <option value="tomorrow">Tomorrow</option>
+                  <option value="week">This Week</option>
+                </select>
+                <select
+                  value={timeOfDay}
+                  onChange={(e) => setTimeOfDay(e.target.value)}
+                  className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                  <option value="">Time Slots</option>
+                  <option value="morning">Morning</option>
+                  <option value="evening">Evening</option>
+                </select>
+                <select
+                  value={consultationType}
+                  onChange={(e) => setConsultationType(e.target.value)}
+                  className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                  <option value="">Consultation Type</option>
+                  <option value="physical">Physical</option>
+                  <option value="online">Online</option>
+                </select>
+                <select
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                  className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                  <option value="">Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
 
-                {/* Time of day */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Time Slots
-                  </label>
-                  <select
-                    value={timeOfDay}
-                    onChange={(e) => setTimeOfDay(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Any</option>
-                    <option value="morning">Morning</option>
-                    <option value="evening">Evening</option>
-                  </select>
-                </div>
-
-                {/* Consultation Type */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Consultation Type
-                  </label>
-                  <select
-                    value={consultationType}
-                    onChange={(e) => setConsultationType(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Any</option>
-                    <option value="physical">Physical (In-person)</option>
-                    <option value="online">Online (Video / Call)</option>
-                  </select>
-                </div>
-
-                {/* Fee Range */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Fee Range
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="Min"
-                      value={minFee}
-                      onChange={(e) => setMinFee(e.target.value)}
-                      className="w-1/2 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="Max"
-                      value={maxFee}
-                      onChange={(e) => setMaxFee(e.target.value)}
-                      className="w-1/2 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Example: 500 – 2000
-                  </p>
-                </div>
-
-                {/* Gender */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Gender
-                  </label>
-                  <select
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Any</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                  </select>
-                </div>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="Min Fee"
+                  value={minFee}
+                  onChange={(e) => setMinFee(e.target.value)}
+                  className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="Max Fee"
+                  value={maxFee}
+                  onChange={(e) => setMaxFee(e.target.value)}
+                  className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
               </div>
             </div>
 
             {/* Advanced */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Advanced
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Experience */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Experience
-                  </label>
-                  <select
-                    value={experience}
-                    onChange={(e) => setExperience(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {EXPERIENCE_OPTIONS.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Ratings */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Ratings &amp; Reviews
-                  </label>
-                  <select
-                    value={rating}
-                    onChange={(e) => setRating(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {RATING_OPTIONS.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
-                  {/* <p className="text-xs text-gray-500 mt-1">
-                    Example: 4+ ⭐ means highly rated doctors.
-                  </p> */}
-                </div>
-
-                {/* Languages */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Languages
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Nepali, English, Hindi"
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  {/* <p className="text-xs text-gray-500 mt-1">
-                    Type one or multiple languages (comma separated).
-                  </p> */}
-                </div>
-              </div>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Advanced</h2>
+              <select
+                value={experience}
+                onChange={(e) => setExperience(e.target.value)}
+                className="p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                {EXPERIENCE_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
             </div>
 
             {/* Submit */}
@@ -401,7 +266,7 @@ const SearchDoctors = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-8 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition"
+                className="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-blue-400 transition"
               >
                 {loading ? "Searching..." : "Search Doctors"}
               </button>
@@ -411,71 +276,54 @@ const SearchDoctors = () => {
 
         {/* Results */}
         {loading ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600">Loading doctors...</p>
-          </div>
+          <div className="text-center py-12 text-gray-600">Loading doctors...</div>
         ) : doctors.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <p className="text-gray-600">
-              No doctors found. Try changing filters or specialization.
-            </p>
+          <div className="bg-white rounded-2xl shadow-xl p-10 text-center text-gray-600">
+            No doctors found. Try changing filters or specialization.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {doctors.map((doctor) => (
               <div
                 key={doctor.id}
-                className="bg-white rounded-lg shadow hover:shadow-lg transition p-6 flex flex-col justify-between"
+                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-800">
-                        {doctor.name}
-                      </h3>
-                      <p className="text-blue-600 font-medium">
-                        {doctor.specialization}
-                      </p>
+                      <h3 className="text-xl font-semibold text-gray-800">{doctor.name}</h3>
+                      <p className="text-blue-600 font-medium">{doctor.specialization}</p>
                     </div>
                     {doctor.isVerified && (
-                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                      <span className="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-semibold">
                         Verified
                       </span>
                     )}
                   </div>
 
-                  {doctor.qualifications && doctor.qualifications.length > 0 && (
-                    <p className="text-sm text-gray-600 mb-1">
-                      {doctor.qualifications.join(", ")}
-                    </p>
+                  {doctor.qualifications?.length > 0 && (
+                    <p className="text-sm text-gray-600 mb-1">{doctor.qualifications.join(", ")}</p>
                   )}
 
                   {doctor.experience > 0 && (
-                    <p className="text-sm text-gray-600 mb-1">
-                      {doctor.experience} years experience
-                    </p>
+                    <p className="text-sm text-gray-600 mb-1">{doctor.experience} years experience</p>
                   )}
 
                   {doctor.bio && (
-                    <p className="text-sm text-gray-700 mb-3 line-clamp-2">
-                      {doctor.bio}
-                    </p>
+                    <p className="text-sm text-gray-700 mb-3 line-clamp-2">{doctor.bio}</p>
                   )}
 
                   <p className="text-sm text-gray-600 mb-1">
-                    <span className="font-medium">Fee:</span>{" "}
-                    Rs. {doctor.consultationFee || 0}
+                    <span className="font-medium">Fee:</span> Rs. {doctor.consultationFee || 0}
                   </p>
                 </div>
 
-                <div className="flex gap-2 mt-4">
-                  <button
-                    onClick={() => handleViewDetails(doctor.id)}
-                    className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition text-sm"
-                  >
-                    View Details & Book
-                  </button>
-                </div>
+                <button
+                  onClick={() => handleViewDetails(doctor.id)}
+                  className="mt-4 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition font-medium"
+                >
+                  View Details & Book
+                </button>
               </div>
             ))}
           </div>
