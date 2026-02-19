@@ -22,6 +22,8 @@ import AdminReports from "./Pages/AdminReports";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
 
+
+
 function App() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
