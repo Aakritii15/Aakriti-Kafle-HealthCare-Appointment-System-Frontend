@@ -49,6 +49,9 @@ const Navbar = () => {
               {user?.role === "patient" && (
                 <>
                   <li className="hover:text-gray-300 cursor-pointer">
+                    <Link to="/departments">Departments</Link>
+                  </li>
+                  <li className="hover:text-gray-300 cursor-pointer">
                     <Link to="/search-doctors">Search Doctors</Link>
                   </li>
                   <li className="hover:text-gray-300 cursor-pointer">
@@ -95,7 +98,7 @@ const Navbar = () => {
             <>
               {/* Public links when not authenticated */}
               <li className="hover:text-gray-300 cursor-pointer">
-                <Link to="/department">Department</Link>
+                <Link to="/departments">Departments</Link>
               </li>
               <li className="hover:text-gray-300 cursor-pointer">
                 <Link to="/doctors">Doctors</Link>

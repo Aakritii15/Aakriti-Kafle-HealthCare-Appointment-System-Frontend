@@ -1,118 +1,73 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Stethoscope, Heart, Baby, Bone, Brain, Smile } from "lucide-react";
 
-const SPECIALIZATIONS = [
-  "General Physician",
-  "Cardiologist",
-  "Dermatologist",
-  "Pediatrician",
-  "Orthopedic",
-  "Gynecologist",
-  "Neurologist",
-  "Psychiatrist",
-  "Dentist",
+const DEPARTMENTS = [
+  { name: "General Physician", desc: "Primary care, check-ups, and common ailments", icon: Stethoscope, path: "/search-doctors?spec=General+Physician" },
+  { name: "Cardiologist", desc: "Heart and cardiovascular health", icon: Heart, path: "/search-doctors?spec=Cardiologist" },
+  { name: "Dermatologist", desc: "Skin, hair, and nail conditions", icon: Smile, path: "/search-doctors?spec=Dermatologist" },
+  { name: "Pediatrician", desc: "Children's health from birth to adolescence", icon: Baby, path: "/search-doctors?spec=Pediatrician" },
+  { name: "Orthopedic", desc: "Bones, joints, and musculoskeletal care", icon: Bone, path: "/search-doctors?spec=Orthopedic" },
+  { name: "Gynecologist", desc: "Women's reproductive and pregnancy care", icon: Heart, path: "/search-doctors?spec=Gynecologist" },
+  { name: "Neurologist", desc: "Brain and nervous system disorders", icon: Brain, path: "/search-doctors?spec=Neurologist" },
+  { name: "Psychiatrist", desc: "Mental health and behavioral conditions", icon: Brain, path: "/search-doctors?spec=Psychiatrist" },
+  { name: "Dentist", desc: "Dental and oral health care", icon: Smile, path: "/search-doctors?spec=Dentist" },
 ];
 
 const Departments = () => {
-  const navigate = useNavigate();
-
-  const getDescription = (dept) => {
-    switch (dept) {
-      case "General Physician":
-        return "Primary healthcare and general medical consultations.";
-      case "Cardiologist":
-        return "Specialized care for heart and cardiovascular conditions.";
-      case "Dermatologist":
-        return "Treatment for skin, hair, and cosmetic issues.";
-      case "Pediatrician":
-        return "Healthcare services for infants and children.";
-      case "Orthopedic":
-        return "Bone, joint, and muscle related treatments.";
-      case "Gynecologist":
-        return "Women’s reproductive and maternity healthcare.";
-      case "Neurologist":
-        return "Brain and nervous system disorders treatment.";
-      case "Psychiatrist":
-        return "Mental health diagnosis and therapy services.";
-      case "Dentist":
-        return "Oral health, dental surgery, and hygiene care.";
-      default:
-        return "";
-    }
-  };
-
   return (
-    <div style={styles.container}>
-      <h1 style={styles.heading}>Our Departments</h1>
-      <p style={styles.subheading}>
-        Explore our specialized medical departments.
-      </p>
-
-      <div style={styles.grid}>
-        {SPECIALIZATIONS.map((dept, index) => (
-          <div key={index} style={styles.card}>
-            <h2 style={styles.title}>{dept}</h2>
-            <p style={styles.description}>{getDescription(dept)}</p>
-
-            <button
-              style={styles.button}
-              onClick={() =>
-                navigate(`/search-doctors?specialization=${dept}`)
-              }
-            >
-              View Doctors
-            </button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+      <section className="py-16 px-6 md:px-10">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-slate-800 mb-4">Our Departments</h1>
+            <p className="text-slate-600 max-w-2xl mx-auto">
+              Browse our medical departments and find the right specialist for your healthcare needs.
+            </p>
           </div>
-        ))}
-      </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {DEPARTMENTS.map((dept) => {
+              const Icon = dept.icon;
+              return (
+                <Link
+                  key={dept.name}
+                  to={dept.path}
+                  className="group bg-white rounded-2xl shadow-md hover:shadow-xl border border-slate-100 p-6 transition-all hover:border-blue-200 hover:-translate-y-1"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 rounded-xl bg-blue-100 text-blue-600 group-hover:bg-blue-500 group-hover:text-white transition">
+                      <Icon className="w-8 h-8" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-slate-800 group-hover:text-blue-600 transition">
+                        {dept.name}
+                      </h3>
+                      <p className="text-sm text-slate-600 mt-1">{dept.desc}</p>
+                      <span className="inline-block mt-3 text-sm font-medium text-blue-600 group-hover:underline">
+                        View doctors →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="mt-12 text-center">
+            <p className="text-slate-600 mb-4">
+              Don&apos;t see your department? <Link to="/contact" className="text-blue-600 hover:underline">Contact us</Link> for more options.
+            </p>
+            <Link
+              to="/search-doctors"
+              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+            >
+              Search All Doctors
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    padding: "60px 80px",
-    minHeight: "80vh",
-    background: "#f4f7fc",
-    textAlign: "center",
-  },
-  heading: {
-    fontSize: "36px",
-    marginBottom: "10px",
-    color: "#1e3c72",
-  },
-  subheading: {
-    marginBottom: "40px",
-    color: "#555",
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-    gap: "30px",
-  },
-  card: {
-    background: "#ffffff",
-    padding: "30px",
-    borderRadius: "12px",
-    boxShadow: "0 6px 15px rgba(0,0,0,0.08)",
-    transition: "0.3s",
-  },
-  title: {
-    color: "#1e3c72",
-    marginBottom: "10px",
-  },
-  description: {
-    fontSize: "14px",
-    color: "#666",
-    marginBottom: "20px",
-  },
-  button: {
-    background: "linear-gradient(90deg, #1e3c72, #2a5298)",
-    color: "white",
-    border: "none",
-    padding: "10px 20px",
-    borderRadius: "6px",
-    cursor: "pointer",
-  },
 };
 
 export default Departments;

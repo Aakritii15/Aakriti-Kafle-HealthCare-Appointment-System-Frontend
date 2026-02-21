@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 
 const SPECIALIZATION_OPTIONS = [
@@ -20,6 +20,8 @@ const RATING_OPTIONS = ["Any", "3+ ⭐", "4+ ⭐", "4.5+ ⭐"];
 
 const SearchDoctors = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const specFromUrl = searchParams.get("spec") || "";
 
   // Results
   const [doctors, setDoctors] = useState([]);
@@ -48,8 +50,12 @@ const SearchDoctors = () => {
 
   useEffect(() => {
     fetchSpecializations();
+    if (specFromUrl) setSpecialization(specFromUrl);
+  }, [specFromUrl]);
+
+  useEffect(() => {
     fetchDoctors();
-  }, []);
+  }, [specialization]);
 
   // Auto-search when specialization changes
   useEffect(() => {

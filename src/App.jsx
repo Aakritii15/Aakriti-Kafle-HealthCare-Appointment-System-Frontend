@@ -21,6 +21,7 @@ import AdminEmergencyCases from "./Pages/AdminEmergencyCases";
 import AdminReports from "./Pages/AdminReports";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
+import Departments from "./Pages/Departments";
 
 
 
@@ -37,6 +38,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/departments" element={<Departments />} />
 
           {/* Protected Routes */}
           <Route
