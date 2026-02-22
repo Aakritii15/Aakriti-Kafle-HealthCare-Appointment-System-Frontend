@@ -58,16 +58,33 @@ const DoctorAppointments = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "confirmed":
+      case "approved":
         return "bg-green-100 text-green-800";
       case "pending":
         return "bg-yellow-100 text-yellow-800";
-      case "cancelled":
+      case "rejected":
         return "bg-red-100 text-red-800";
+      case "cancelled":
+        return "bg-gray-100 text-gray-800";
       case "completed":
         return "bg-blue-100 text-blue-800";
       default:
         return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const handleAction = async (aptId, action, extra = {}) => {
+    try {
+      const config = getAuthConfig();
+      const url = `http://localhost:3000/appointments/${aptId}/${action}`;
+      await axios.put(url, extra, config);
+      fetchAppointments();
+      if (selectedAppointment?._id === aptId) {
+        setSelectedPatient(null);
+        setSelectedAppointment(null);
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || `Failed to ${action}`);
     }
   };
 
@@ -168,9 +185,51 @@ const DoctorAppointments = () => {
                       </p>
                     )}
                   </div>
-                  <div className="text-right text-sm text-gray-500">
-                    {apt.patientId?.email && <p>{apt.patientId.email}</p>}
-                    {apt.patientId?.phone && <p>{apt.patientId.phone}</p>}
+                  <div className="flex flex-col gap-2 items-end">
+                    {apt.patientId?.email && <p className="text-sm text-gray-500">{apt.patientId.email}</p>}
+                    {apt.patientId?.phone && <p className="text-sm text-gray-500">{apt.patientId.phone}</p>}
+                    <div className="flex flex-wrap gap-2 mt-2 justify-end">
+                      {apt.status === "pending" && (
+                        <>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleAction(apt._id, "approve"); }}
+                            className="px-3 py-1.5 rounded bg-green-600 text-white text-sm hover:bg-green-700"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const reason = prompt("Rejection reason (optional):");
+                              if (reason !== null) handleAction(apt._id, "reject", { reason });
+                            }}
+                            className="px-3 py-1.5 rounded bg-red-600 text-white text-sm hover:bg-red-700"
+                          >
+                            Reject
+                          </button>
+                        </>
+                      )}
+                      {apt.status === "approved" && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); if (window.confirm("Mark this appointment as completed?")) handleAction(apt._id, "complete"); }}
+                          className="px-3 py-1.5 rounded bg-blue-600 text-white text-sm hover:bg-blue-700"
+                        >
+                          Mark as Completed
+                        </button>
+                      )}
+                      {(apt.status === "pending" || apt.status === "approved") && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const reason = prompt("Cancellation reason:");
+                            if (reason?.trim()) handleAction(apt._id, "cancel", { cancellationReason: reason });
+                          }}
+                          className="px-3 py-1.5 rounded bg-gray-500 text-white text-sm hover:bg-gray-600"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -245,10 +304,30 @@ const DoctorAppointments = () => {
               )}
               {selectedPatient.notes && (
                 <div>
-                  <p className="text-xs uppercase tracking-wide text-gray-500">
-                    Notes
-                  </p>
+                  <p className="text-xs uppercase tracking-wide text-gray-500">Notes</p>
                   <p>{selectedPatient.notes}</p>
+                </div>
+              )}
+              {selectedAppointment && (selectedAppointment.status === "pending" || selectedAppointment.status === "approved") && (
+                <div className="pt-3 border-t flex flex-wrap gap-2">
+                  {selectedAppointment.status === "pending" && (
+                    <>
+                      <button onClick={() => handleAction(selectedAppointment._id, "approve")} className="px-3 py-2 rounded bg-green-600 text-white text-sm hover:bg-green-700">
+                        Approve
+                      </button>
+                      <button onClick={() => { const r = prompt("Rejection reason (optional):"); if (r !== null) handleAction(selectedAppointment._id, "reject", { reason: r }); }} className="px-3 py-2 rounded bg-red-600 text-white text-sm hover:bg-red-700">
+                        Reject
+                      </button>
+                    </>
+                  )}
+                  {selectedAppointment.status === "approved" && (
+                    <button onClick={() => window.confirm("Mark as completed?") && handleAction(selectedAppointment._id, "complete")} className="px-3 py-2 rounded bg-blue-600 text-white text-sm hover:bg-blue-700">
+                      Mark as Completed
+                    </button>
+                  )}
+                  <button onClick={() => { const r = prompt("Cancellation reason:"); if (r?.trim()) handleAction(selectedAppointment._id, "cancel", { cancellationReason: r }); }} className="px-3 py-2 rounded bg-gray-500 text-white text-sm hover:bg-gray-600">
+                    Cancel Appointment
+                  </button>
                 </div>
               )}
             </div>

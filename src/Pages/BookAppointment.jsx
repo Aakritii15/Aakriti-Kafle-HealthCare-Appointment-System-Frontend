@@ -32,7 +32,7 @@ const BookAppointment = () => {
         `http://localhost:3000/appointments/booked-slots?doctorId=${doctorId}&date=${formData.appointmentDate}`,
         config
       );
-      setBookedSlots(res.data.slots || []);
+      setBookedSlots(Array.isArray(res.data) ? res.data : res.data?.slots || []);
     } catch (err) {
       console.error("Error fetching booked slots:", err);
     }
@@ -186,6 +186,12 @@ const BookAppointment = () => {
           <div className="space-y-2">
             <p><span className="font-medium">Name:</span> {doctor.name}</p>
             <p><span className="font-medium">Specialization:</span> {doctor.specialization}</p>
+            {(doctor.averageRating > 0 || doctor.totalReviews > 0) && (
+              <p>
+                <span className="font-medium">Rating:</span> ★ {doctor.averageRating?.toFixed(1) || "0"} 
+                ({doctor.totalReviews || 0} review{doctor.totalReviews !== 1 ? "s" : ""})
+              </p>
+            )}
             {doctor.qualifications && doctor.qualifications.length > 0 && (
               <p><span className="font-medium">Qualifications:</span> {doctor.qualifications.join(", ")}</p>
             )}

@@ -87,7 +87,7 @@ const AdminReports = () => {
               <Calendar className="w-8 h-8 text-green-600" />
               <h3 className="font-semibold text-gray-800">Appointments</h3>
             </div>
-            {["pending", "confirmed", "completed", "cancelled"].map((status) => (
+            {["pending", "approved", "rejected", "completed", "cancelled"].map((status) => (
               <p key={status} className="text-lg text-gray-600 capitalize">
                 {status}: {appointments?.[status] ?? 0}
               </p>

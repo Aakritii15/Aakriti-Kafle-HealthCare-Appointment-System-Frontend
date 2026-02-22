@@ -57,6 +57,18 @@ const AdminDashboard = () => {
           </div>
 
           <div
+            onClick={() => navigate("/admin/appointments")}
+            className="bg-teal-50 p-6 rounded-xl cursor-pointer hover:shadow-md hover:scale-105 transition"
+          >
+            <h3 className="font-semibold text-teal-800 text-lg">
+              Manage Appointments
+            </h3>
+            <p className="text-sm text-gray-600 mt-2">
+              View and cancel appointments (policy violation)
+            </p>
+          </div>
+
+          <div
             onClick={() => navigate("/admin/emergency-cases")}
             className="bg-amber-50 p-6 rounded-xl cursor-pointer hover:shadow-md hover:scale-105 transition"
           >

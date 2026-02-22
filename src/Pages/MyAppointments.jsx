@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getAuthConfig } from "../utils/auth";
+import { Star } from "lucide-react";
 
 const MyAppointments = () => {
   const navigate = useNavigate();
@@ -10,6 +11,9 @@ const MyAppointments = () => {
   const [error, setError] = useState("");
   const [cancellingId, setCancellingId] = useState(null);
   const [cancelReasons, setCancelReasons] = useState({});
+  const [reviewingId, setReviewingId] = useState(null);
+  const [reviewRating, setReviewRating] = useState({});
+  const [reviewText, setReviewText] = useState({});
 
   useEffect(() => {
     fetchAppointments();
@@ -94,17 +98,44 @@ const MyAppointments = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "confirmed": return "bg-green-100 text-green-800";
+      case "approved": return "bg-green-100 text-green-800";
       case "pending": return "bg-yellow-100 text-yellow-800";
-      case "cancelled": return "bg-red-100 text-red-800";
+      case "rejected": return "bg-red-100 text-red-800";
+      case "cancelled": return "bg-gray-100 text-gray-800";
       case "completed": return "bg-blue-100 text-blue-800";
       default: return "bg-gray-100 text-gray-800";
     }
   };
 
   const canCancel = (appointment) => (
-    appointment.status === "pending" || appointment.status === "confirmed"
+    (appointment.status === "pending" || appointment.status === "approved")
   );
+
+  const handleSubmitReview = async (appointmentId) => {
+    const rating = reviewRating[appointmentId];
+    if (!rating) {
+      alert("Please select a rating (1-5 stars)");
+      return;
+    }
+    setReviewingId(appointmentId);
+    try {
+      const config = getAuthConfig();
+      await axios.post(
+        "http://localhost:3000/reviews",
+        { appointmentId, rating, review: reviewText[appointmentId] || "" },
+        config
+      );
+      alert("Thank you for your feedback!");
+      setReviewRating((prev) => { const p = { ...prev }; delete p[appointmentId]; return p; });
+      setReviewText((prev) => { const p = { ...prev }; delete p[appointmentId]; return p; });
+      setReviewingId(null);
+      fetchAppointments();
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to submit review");
+    } finally {
+      setReviewingId(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -212,6 +243,47 @@ const MyAppointments = () => {
                   <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3">
                     <p className="text-sm font-medium text-red-800">Cancellation Reason</p>
                     <p className="text-red-700">{appointment.cancellationReason}</p>
+                  </div>
+                )}
+
+                {/* Rate & Review (completed appointments) */}
+                {appointment.status === "completed" && appointment.hasReviewed && (
+                  <p className="mb-4 text-green-700 font-medium">✓ You have reviewed this appointment.</p>
+                )}
+                {appointment.status === "completed" && !appointment.hasReviewed && (
+                  <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm font-medium text-blue-800 mb-2">Rate & Review Dr. {appointment.doctor.name}</p>
+                    <div className="flex items-center gap-1 mb-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setReviewRating((prev) => ({ ...prev, [appointment.id]: star }))}
+                          className="p-0.5"
+                        >
+                          <Star
+                            className={`w-8 h-8 ${(reviewRating[appointment.id] || 0) >= star ? "fill-amber-400 text-amber-400" : "text-gray-300"}`}
+                          />
+                        </button>
+                      ))}
+                      <span className="ml-2 text-sm text-gray-600">
+                        {(reviewRating[appointment.id] || 0)} / 5
+                      </span>
+                    </div>
+                    <textarea
+                      placeholder="Leave a review (optional)"
+                      value={reviewText[appointment.id] || ""}
+                      onChange={(e) => setReviewText((prev) => ({ ...prev, [appointment.id]: e.target.value }))}
+                      className="w-full p-2 border rounded mb-2 text-sm"
+                      rows="2"
+                    />
+                    <button
+                      onClick={() => handleSubmitReview(appointment.id)}
+                      disabled={reviewingId === appointment.id}
+                      className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      {reviewingId === appointment.id ? "Submitting..." : "Submit Review"}
+                    </button>
                   </div>
                 )}
 

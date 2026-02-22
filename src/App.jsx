@@ -19,6 +19,7 @@ import DoctorVerification from "./Pages/DoctorVerification";
 import AdminUserManagement from "./Pages/AdminUserManagement";
 import AdminEmergencyCases from "./Pages/AdminEmergencyCases";
 import AdminReports from "./Pages/AdminReports";
+import AdminAppointments from "./Pages/AdminAppointments";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
 import Departments from "./Pages/Departments";
@@ -128,6 +129,14 @@ function App() {
             element={
               <ProtectedRoute requiredRole="admin">
                 <AdminUserManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/appointments"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminAppointments />
               </ProtectedRoute>
             }
           />

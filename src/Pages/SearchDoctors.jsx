@@ -322,6 +322,11 @@ const SearchDoctors = () => {
                   <p className="text-sm text-gray-600 mb-1">
                     <span className="font-medium">Fee:</span> Rs. {doctor.consultationFee || 0}
                   </p>
+                  {(doctor.averageRating > 0 || doctor.totalReviews > 0) && (
+                    <p className="text-sm text-amber-600 font-medium">
+                      ★ {doctor.averageRating?.toFixed(1) || "0"} ({doctor.totalReviews || 0} review{doctor.totalReviews !== 1 ? "s" : ""})
+                    </p>
+                  )}
                 </div>
 
                 <button
