@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getAuthConfig } from "../utils/auth";
+import { showSuccessToast, showErrorToast, showWarningToast } from "../utils/toast";
 import { Star } from "lucide-react";
 
 const MyAppointments = () => {
@@ -38,7 +39,7 @@ const MyAppointments = () => {
     const cancelReason = cancelReasons[appointmentId] || "";
     
     if (!cancelReason.trim()) {
-      alert("Please provide a reason for cancellation");
+      showWarningToast("Please provide a reason for cancellation");
       return;
     }
 
@@ -55,7 +56,7 @@ const MyAppointments = () => {
         config
       );
 
-      alert("Appointment cancelled successfully");
+      showSuccessToast("Appointment cancelled successfully");
       setCancelReasons(prev => {
         const newReasons = { ...prev };
         delete newReasons[appointmentId];
@@ -64,7 +65,7 @@ const MyAppointments = () => {
       setCancellingId(null);
       fetchAppointments();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to cancel appointment");
+      showErrorToast(err.response?.data?.message || "Failed to cancel appointment");
       console.error("Cancel error:", err);
     } finally {
       setCancellingId(null);
@@ -114,7 +115,7 @@ const MyAppointments = () => {
   const handleSubmitReview = async (appointmentId) => {
     const rating = reviewRating[appointmentId];
     if (!rating) {
-      alert("Please select a rating (1-5 stars)");
+      showWarningToast("Please select a rating (1-5 stars)");
       return;
     }
     setReviewingId(appointmentId);
@@ -125,13 +126,13 @@ const MyAppointments = () => {
         { appointmentId, rating, review: reviewText[appointmentId] || "" },
         config
       );
-      alert("Thank you for your feedback!");
+      showSuccessToast("Thank you for your feedback!");
       setReviewRating((prev) => { const p = { ...prev }; delete p[appointmentId]; return p; });
       setReviewText((prev) => { const p = { ...prev }; delete p[appointmentId]; return p; });
       setReviewingId(null);
       fetchAppointments();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to submit review");
+      showErrorToast(err.response?.data?.message || "Failed to submit review");
     } finally {
       setReviewingId(null);
     }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { getAuthConfig, isAuthenticated, isDoctor } from "../utils/auth";
+import { showSuccessToast, showErrorToast } from "../utils/toast";
 import { ClipboardList, User, AlertCircle } from "lucide-react";
 
 const DoctorAppointments = () => {
@@ -84,7 +85,7 @@ const DoctorAppointments = () => {
         setSelectedAppointment(null);
       }
     } catch (err) {
-      alert(err.response?.data?.message || `Failed to ${action}`);
+      showErrorToast(err.response?.data?.message || `Failed to ${action}`);
     }
   };
 

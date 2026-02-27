@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { isAuthenticated, isAdmin, getAuthConfig } from "../utils/auth";
+import { showErrorToast } from "../utils/toast";
 import { Users, ArrowLeft, Search } from "lucide-react";
 
 const API_BASE = "http://localhost:3000/api/admin";
@@ -47,7 +48,7 @@ const AdminUserManagement = () => {
       setUsers(prev => prev.map(u => (u._id === id ? { ...u, isActive: !currentActive } : u)));
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || "Failed to update user");
+      showErrorToast(err.response?.data?.message || "Failed to update user");
     }
   };
 

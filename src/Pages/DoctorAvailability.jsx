@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getAuthConfig, isAuthenticated, isDoctor } from "../utils/auth";
+import { showSuccessToast, showErrorToast } from "../utils/toast";
 
 const DAYS_OF_WEEK = [
   "monday",
@@ -88,10 +89,10 @@ const DoctorAvailability = () => {
         { status, availability },
         config
       );
-      alert("Availability updated successfully!");
+      showSuccessToast("Availability updated successfully!");
       navigate("/doctor/dashboard");
     } catch (err) {
-      alert("Failed to update availability.");
+      showErrorToast("Failed to update availability.");
     } finally {
       setSaving(false);
     }

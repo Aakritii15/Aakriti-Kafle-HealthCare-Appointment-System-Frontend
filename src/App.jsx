@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 import ProtectedRoute from "./Components/ProtectedRoute";
@@ -23,6 +25,8 @@ import AdminAppointments from "./Pages/AdminAppointments";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
 import Departments from "./Pages/Departments";
+import PatientChat from "./Pages/PatientChat";
+import DoctorChat from "./Pages/DoctorChat";
 
 
 
@@ -83,6 +87,14 @@ function App() {
             }
           />
           <Route
+            path="/doctor/chat"
+            element={
+              <ProtectedRoute requiredRole="doctor">
+                <DoctorChat />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/doctor/availability"
             element={
               <ProtectedRoute requiredRole="doctor">
@@ -105,6 +117,14 @@ function App() {
             element={
               <ProtectedRoute requiredRole="patient">
                 <BookAppointment />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/patient/chat"
+            element={
+              <ProtectedRoute requiredRole="patient">
+                <PatientChat />
               </ProtectedRoute>
             }
           />
@@ -159,11 +179,20 @@ function App() {
 
         </Routes>
 
-
-
-
       </main>
       <Footer />
+      <ToastContainer 
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

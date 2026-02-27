@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import { showErrorToast } from "../utils/toast";
 
 const SPECIALIZATION_OPTIONS = [
   "General Physician",
@@ -118,7 +119,7 @@ const SearchDoctors = () => {
       setDoctors(res.data.doctors);
     } catch (err) {
       console.error("Error fetching doctors:", err);
-      alert("Failed to fetch doctors. Please try again.");
+      showErrorToast("Failed to fetch doctors. Please try again.");
     } finally {
       setLoading(false);
     }

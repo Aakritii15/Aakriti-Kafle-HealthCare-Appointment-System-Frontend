@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { showSuccessToast, showErrorToast, showInfoToast } from "../utils/toast";
 import registerImage from "../assets/R.jpg";
 
 const SPECIALIZATION_OPTIONS = [
@@ -97,15 +98,16 @@ const Register = () => {
       const res = await axios.post("http://localhost:3000/users/register", registrationData);
 
       if (formData.role === "doctor" && res.data.requiresVerification) {
-        alert(`${res.data.message}\n\nYour doctor account is pending admin verification. You can login, but some features may be limited until an admin verifies your account.`);
+        showInfoToast(`${res.data.message}\n\nYour doctor account is pending admin verification. You can login, but some features may be limited until an admin verifies your account.`);
       } else {
-        alert(res.data.message);
+        showSuccessToast(res.data.message);
       }
 
       navigate("/login");
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || "Registration failed. Please check your connection and try again.";
       setError(errorMessage);
+      showErrorToast(errorMessage);
       console.error("Registration error:", err);
     } finally {
       setLoading(false);

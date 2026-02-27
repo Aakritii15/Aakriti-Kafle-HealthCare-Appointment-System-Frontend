@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { isAuthenticated, isAdmin, getAuthConfig } from "../utils/auth";
+import { showErrorToast } from "../utils/toast";
 import { Calendar, ArrowLeft } from "lucide-react";
 
 const API_BASE = "http://localhost:3000";
@@ -43,7 +44,7 @@ const AdminAppointments = () => {
       await axios.put(`${API_BASE}/appointments/${id}/cancel`, { cancellationReason: reason }, config);
       fetchAppointments();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to cancel");
+      showErrorToast(err.response?.data?.message || "Failed to cancel");
     } finally {
       setCancellingId(null);
     }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { showSuccessToast, showErrorToast } from "../utils/toast";
 import loginImage from "../assets/Login.jpg";
 
 const Login = () => {
@@ -34,11 +35,12 @@ const Login = () => {
         default: redirectPath = "/"; 
       }
 
-      alert("Login successful!");
+      showSuccessToast("Login successful!");
       navigate(redirectPath);
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || "Login failed. Check your credentials.";
       setError(errorMessage);
+      showErrorToast(errorMessage);
       console.error("Login error:", err);
     } finally {
       setLoading(false);

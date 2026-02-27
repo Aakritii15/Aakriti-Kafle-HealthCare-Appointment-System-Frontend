@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { getAuthConfig } from "../utils/auth";
+import { showSuccessToast, showErrorToast } from "../utils/toast";
 
 const BookAppointment = () => {
   const navigate = useNavigate();
@@ -130,10 +131,10 @@ const BookAppointment = () => {
         config
       );
 
-      alert("Appointment booked successfully!");
+      showSuccessToast("Appointment booked successfully!");
       navigate("/my-appointments");
     } catch (err) {
-      const errorMessage = err.response?.data?.message || "Failed to book appointment. Please try again.";
+      showErrorToast(err.response?.data?.message || "Failed to book appointment. Please try again.");
       setError(errorMessage);
       console.error("Booking error:", err);
     } finally {

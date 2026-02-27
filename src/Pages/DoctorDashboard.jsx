@@ -5,7 +5,8 @@ import {
   CalendarDays,
   ClipboardList,
   UserRound,
-  BadgeCheck
+  BadgeCheck,
+  MessageCircle,
 } from "lucide-react";
 import { isAuthenticated, isDoctor, getDoctorInfo } from "../utils/auth";
 
@@ -72,7 +73,7 @@ const DoctorDashboard = () => {
         </div>
 
         {/* Action Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
           {/* Availability */}
           <button
@@ -128,6 +129,25 @@ const DoctorDashboard = () => {
             </div>
             <p className="text-sm text-slate-600">
               Access patient information securely from appointments.
+            </p>
+          </button>
+
+          {/* Chat */}
+          <button
+            type="button"
+            onClick={() => navigate("/doctor/chat")}
+            className="group bg-white rounded-2xl border border-slate-200 shadow-md hover:shadow-xl transition-all p-6 text-left"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="p-3 rounded-xl bg-cyan-100 text-cyan-700">
+                <MessageCircle />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-800">
+                Chat & Prescriptions
+              </h3>
+            </div>
+            <p className="text-sm text-slate-600">
+              Message patients and upload prescriptions.
             </p>
           </button>
 
